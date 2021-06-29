@@ -13,17 +13,7 @@ pipeline {
             environment {
               JENKINS = credentials('jenkins_user')
             }
-            steps {
-                sh 'rm -rf globex-war'
-                script {
-                    def server = Artifactory.server 'sndevops1'
-                    def downloadSpec = """{
-                    "files": [
-                    {
-                        "pattern": "corpsite/com/globex/*.war"
-                    }]}"""
-                    server.download spec: downloadSpec
-                }                
+            steps {      
                 snDevOpsPackage(name: "package", artifactsPayload: """{"artifacts": [{"name": "globex-web-1.0.0.war", "repositoryName": "corpsite", "pipelineName": "${env.JOB_BASE_NAME}", "version": "1.0.0.${env.artifactVersion}"}]}""")
             }
         }
